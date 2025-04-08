@@ -8,7 +8,14 @@ function Activities() {
       "https://potential-space-goggles-x94r6v5v4j6c6jg4-8000.app.github.dev/api/activities/"
     )
       .then((response) => response.json())
-      .then((data) => setActivities(data))
+      .then((data) => {
+        // Map the user field to a readable format
+        const formattedData = data.map((activity) => ({
+          ...activity,
+          user: activity.user.split(" ")[2], // Extract the user ID from the string
+        }));
+        setActivities(formattedData);
+      })
       .catch((error) => console.error("Error fetching activities:", error));
   }, []);
 
@@ -18,6 +25,7 @@ function Activities() {
       <table className="table table-striped">
         <thead>
           <tr>
+            <th>User ID</th>
             <th>Activity Type</th>
             <th>Duration</th>
           </tr>
@@ -25,6 +33,7 @@ function Activities() {
         <tbody>
           {activities.map((activity) => (
             <tr key={activity._id}>
+              <td>{activity.user}</td>
               <td>{activity.activity_type}</td>
               <td>{activity.duration}</td>
             </tr>
